@@ -1,2 +1,2 @@
 # koken-vue
-Vue3 Replacement for the retired Koken Photo CMS
+Vue3 Replacement of Koken
