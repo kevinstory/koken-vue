@@ -17,23 +17,19 @@ const showUpload = ref(false)
 const category = ref(null)
 const store = userStore();
 function inspectPhoto(p) {
-    //console.log('emit photo inspection', p)
     photo.value = p
 }
 function showUploadDialog() {
-    //console.log('upload')
     showUpload.value = !showUpload.value
 }
 async function deletePhoto(id) {
     await console.log(id)
 }
 function submitSuccess() {
-    //console.log('success upload!')
     getPhotos()
     showUpload.value = false
 }
 function selectCategory(cat) {
-    //console.log('select category', cat)
     if (cat == null) {
         category.value = null
 
@@ -44,7 +40,6 @@ function selectCategory(cat) {
     getPhotos()
 }
 async function updatePhoto(p) {
-    console.log('update caption', p)
     let url = strapi + `/photos/` + p.id
     try {
         const response = await axios.put(url, { "Caption": p.Caption, "Title": p.Title }, {
@@ -53,7 +48,6 @@ async function updatePhoto(p) {
                     'Bearer ' + store.token,
             },
         });
-        console.log(response);
 
     } catch (error) {
         console.error(error);
@@ -74,7 +68,6 @@ async function getPhotos() {
                     'Bearer ' +  store.token,
             },
         });
-        //console.log(response);
         photos.value = response.data
         photo.value = photos.value[0]
     } catch (error) {
@@ -83,14 +76,8 @@ async function getPhotos() {
 }
 async function logout() {
   try {
-    console.log('logging out method"');
     store.$reset();
     const navigationResult = await router.push("/auth/login");
-    if (navigationResult) {
-      console.log(navigationResult);
-    } else {
-      console.log("log out success");
-    }
   } catch (error) {
     console.log(error, "log out error catch");
     errors.value = error.response;

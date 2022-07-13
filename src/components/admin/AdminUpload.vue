@@ -6,20 +6,16 @@ const emit = defineEmits(['submit', 'close'])
 const photo = ref(null)
 const pending = ref(false)
 const title = ref(null)
+const store = userStore();
 function selectPhoto(e) {
-    console.log(e);
-    photo.value = e.target.files[0];
+    photo.value = e.target.files;
 }
-async function uploadPhoto(e) {
-    const store = userStore();
-    pending.value = true
-    e.preventDefault()
-    let data = { "Title": title.value };
-    //console.log('uploaded', photo.value)
+async function upload(p) {
+    console.log('uploading a photo', p)
     let formData = new FormData();
-    formData.append("files.photo", photo.value, photo.value.name);
-    //console.log('forData', formData)
-    formData.append("data", JSON.stringify(data));
+    let data = { "Title": p.name };
+    formData.append("files.photo", p, p.name);
+    formData.append("data", JSON.stringify(p.name));
     try {
         const response = await axios.post('http://192.168.1.99:1337/photos', formData, {
             headers: {
@@ -28,15 +24,19 @@ async function uploadPhoto(e) {
                     'Bearer ' + store.token,
             }
         });
-        //console.log(response);
-        pending.value = false
-        emit('submit')
     } catch (error) {
         console.error(error);
-        pending.value = false
-
     }
-
+}
+async function uploadPhoto(e) {
+    console.log(photo.value)
+    pending.value = true
+    e.preventDefault()
+    for (let i = 0; i < photo.value.length; i++) {
+        await upload(photo.value[i]);
+    }
+    pending.value = false
+    emit('submit')
 }
 </script>
 
@@ -46,11 +46,12 @@ async function uploadPhoto(e) {
             <div>Upload</div>
             <div>
                 <form class="flex flex-col justify-around items-center gap-3">
-                    <div class="w-full">
+                    <!-- <div class="w-full">
                         <input type="text" name="title" v-model="title" class="rounded w-full px-2 text-zinc-800"
                             placeholder="Title" />
-                    </div>
-                    <input type="file" class="bg-white w-full rounded p-1 border text-zinc-800" @change="selectPhoto" />
+                    </div> -->
+                    <input type="file" class="bg-white w-full rounded p-1 border text-zinc-800" @change="selectPhoto"
+                        multiple />
 
                 </form>
             </div>

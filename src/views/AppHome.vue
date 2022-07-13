@@ -9,10 +9,6 @@ const photos = ref([]);
 const category = ref(null);
 const errors = ref("")
 const store = userStore();
-onUpdated(async () => {
-  //console.log('onUpdated')
-});
-
 async function getPhotos() {
   let url = ''
   if (category.value == null) {
@@ -22,7 +18,6 @@ async function getPhotos() {
   }
   try {
     const response = await axios.get(url);
-    console.log(response);
     photos.value = response.data
 
   } catch (error) {
@@ -44,7 +39,7 @@ onMounted(() => {
       </div>
     </div>
     <div
-      class="bg-white min-h-full h-screen w-screen grid grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-0.5">
+      class="bg-white min-h-full h-screen w-screen grid grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-0 md:gap-0.5">
       <template v-for="photo in photos" :key="photo.id">
         <template v-if="photo.photo.width > photo.photo.height">
           <div class="col-span-2">

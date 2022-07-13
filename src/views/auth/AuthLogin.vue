@@ -34,8 +34,8 @@ import axios from 'axios'
 import { userStore } from "../../stores/user";
 import router from "../../router/index.js";
 const strapi = import.meta.env.VITE_STRAPI_URL
-const email = import.meta.env.VITE_STRAPI_LOGIN
-const password = import.meta.env.VITE_STRAPI_PASSWORD
+const email = ref('')
+const password = ref('')
 const errors = ref("")
 const loginPending = ref(false)
 const loginDialog = ref(true)
@@ -43,7 +43,6 @@ const bgImage = '../images/bg.png'
 async function login(e) {
   const store = userStore();
   e.preventDefault();
-  console.log('login attempt')
   try {
     const { data } = await axios.post(strapi + '/auth/local', {
       identifier: email.value,
@@ -51,19 +50,11 @@ async function login(e) {
     });
     const token = data.jwt;
     const userAuth = data.user;
-    console.log("Success Strapi Login", data, token, userAuth);
 
     store.token = token;
     store.userAuth = userAuth;
     if (token) {
-      //const user = await Firebase.getUserData(userAuth.email);
-      console.log("routing");
       const navigationResult = await router.push({ path: '/admin' });
-      if (navigationResult) {
-        console.log("nav", navigationResult);
-      } else {
-        console.log('nav failed')
-      }
     }
   } catch (error) {
     errors.value = error.response;

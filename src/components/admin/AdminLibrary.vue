@@ -8,7 +8,6 @@ const active = ref(null)
 async function getCategories() {
     try {
         const response = await axios.get(strapi + '/categories');
-        //console.log(response);
         categories.value = response.data
     } catch (error) {
         console.error(error);
