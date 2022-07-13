@@ -72,7 +72,7 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   const store = await userStore();
   if (to.meta.requiresAuth) {
-    if (store.isLoggedIn) {
+    if (store.isAdmin) {
       next();
       return;
     }

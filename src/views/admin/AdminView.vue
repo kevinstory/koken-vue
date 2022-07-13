@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import router from "../../router/index.js";
-
 import { userStore } from "../../stores/user";
 import AdminNav from '../../components/admin/AdminNav.vue'
 import AdminFooter from '../../components/admin/AdminFooter.vue'
@@ -15,7 +14,13 @@ const photos = ref([])
 const photo = ref(null)
 const showUpload = ref(false)
 const category = ref(null)
+const apiParams = ref('_sort=created_at:ASC')
 const store = userStore();
+function sortPhotos(p) {
+    console.log('sorting: ', p)
+    apiParams.value = p
+    getPhotos()
+}
 function inspectPhoto(p) {
     photo.value = p
 }
@@ -54,12 +59,11 @@ async function updatePhoto(p) {
     }
 }
 async function getPhotos() {
-    
     let url = ''
     if (category.value == null) {
-        url = strapi + `/photos`
+        url = strapi + `/photos?` + apiParams.value
     } else {
-        url = strapi + `/photos?categories.Category_in=` + category.value
+        url = strapi + `/photos?categories.Category_in=` + category.value + '&' + apiParams.value
     }
     try {
         const response = await axios.get(url, {
@@ -68,6 +72,7 @@ async function getPhotos() {
                     'Bearer ' +  store.token,
             },
         });
+        //console.log('get photos', response.data)
         photos.value = response.data
         photo.value = photos.value[0]
     } catch (error) {
@@ -97,7 +102,7 @@ onMounted(() => {
 
             <div class="flex flex-row justify-between items-center w-screen min-h-max flex-grow">
                 <AdminLibrary @select-category="selectCategory" />
-                <AdminContent @inspect-photo="inspectPhoto" :photos="photos" :category="category" />
+                <AdminContent @inspect-photo="inspectPhoto" :photos="photos" :category="category" @sort-photos="sortPhotos"/>
                 <AdminInspector :photo="photo" @delete="deletePhoto(id)" @update-photo="updatePhoto" />
             </div>
             <div>

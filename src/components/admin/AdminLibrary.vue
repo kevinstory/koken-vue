@@ -38,7 +38,7 @@ onMounted(() => {
                     <div>
                         <div class="font-semibold text-zinc-200 pb-2">Categories</div>
                         <div class="font-semibold text-zinc-400 hover:text-zinc-200 active:text-zinc-300" v-for="category in categories" :key="category.id">
-                            <div @click="$emit('selectCategory', category), setActive(category.id)" class="cursor-pointer" :active="active = category.id">{{ category.Category }}</div>
+                            <div @click="$emit('selectCategory', category), setActive(category.id)" class="cursor-pointer" :active="active = category.id"> - {{ category.Category }}</div>
                         </div>
                     </div>
 

@@ -15,12 +15,12 @@ const store = userStore();
         class="w-96 h-full bg-black text-zinc-400 flex flex-col justify-between items-start flex-grow border-r border-zinc-800">
         <div class="w-full bg-zinc-900 border-b border-zinc-800 p-2">Inspector</div>
         <div class="w-full h-full flex flex-col">
-            <div class="flex items-center justify-around border-b border-black mb-3" v-if="props.photo">
+            <div class="flex items-center justify-around border-b border-black mb-0" v-if="props.photo">
                 <template v-if="props.photo.photo.formats">
                     <a :href="strapi + props.photo.photo.url" target="_blank"><img
                             :src="strapi + props.photo.photo.formats.small.url"
                             :alt="props.photo.Title"
-                            class="block object-cover object-center max-h-96 w-full h-full"></a>
+                            class="block object-cover object-center w-full h-full"></a>
                 </template>
                 <template v-else>
 

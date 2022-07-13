@@ -4,7 +4,10 @@ import { defineStore } from 'pinia'
 export const userStore = defineStore('userStore', {
     state: () => ({
         token: '',
-        user: {}
+        user: {'role': 0},
+        settings: {
+            square: false
+        }
     }),
     getters: {
         isLoggedIn: (state) => {
@@ -15,6 +18,9 @@ export const userStore = defineStore('userStore', {
         },
         getToken: (state) => {
             return state.token;
+        },
+        isAdmin: (state) => {
+            return state.user.role.id == 3 ? true : false;
         }
     },
     actions: {

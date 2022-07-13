@@ -40,22 +40,30 @@ const errors = ref("")
 const loginPending = ref(false)
 const loginDialog = ref(true)
 const bgImage = '../images/bg.png'
+const store = userStore();
 async function login(e) {
-  const store = userStore();
+  
   e.preventDefault();
   try {
     const { data } = await axios.post(strapi + '/auth/local', {
       identifier: email.value,
       password: password.value,
     });
-    const token = data.jwt;
-    const userAuth = data.user;
-
+    const token = await data.jwt;
+    const userAuth = await data.user;
+    console.log(data.user)
     store.token = token;
-    store.userAuth = userAuth;
-    if (token) {
-      const navigationResult = await router.push({ path: '/admin' });
+    store.user = userAuth;
+    if (data.user.role.id == 3) {
+      if (token) {
+        router.push({ path: '/admin' });
+      }
+
     }
+    else {
+      router.push({ path: '/home' });
+    }
+
   } catch (error) {
     errors.value = error.response;
   }
