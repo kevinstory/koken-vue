@@ -18,6 +18,7 @@ async function getPhotos() {
   try {
     const response = await axios.get(url);
     photos.value = response.data
+    //console.log(photos.value)
 
   } catch (error) {
     console.error(error);
@@ -53,7 +54,7 @@ onMounted(() => {
       <template v-for="photo in photos" :key="photo.id">
         <template v-if="photo.photo.width > photo.photo.height">
           <div class="col-span-2">
-            <img :src="strapi + photo.photo.url"
+            <img :src="strapi + photo.photo.formats.small.url"
               class="block object-cover object-center w-full h-full col-span-2 cursor-pointer"
               @click="router.push({ name: 'photo', params: { id: photo.id } })" />
           </div>
@@ -61,7 +62,7 @@ onMounted(() => {
         </template>
         <template v-else>
           <div>
-            <img :src="strapi + photo.photo.url" class="block object-cover object-center w-full h-full cursor-pointer"
+            <img :src="strapi + photo.photo.formats.small.url" class="block object-cover object-center w-full h-full cursor-pointer"
               @click="router.push({ name: 'photo', params: { id: photo.id } })" />
 
           </div>

@@ -2,9 +2,9 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 const strapi = import.meta.env.VITE_STRAPI_URL
-
 const categories = ref([])
 const active = ref(null)
+
 async function getCategories() {
     try {
         const response = await axios.get(strapi + '/categories');
@@ -37,8 +37,13 @@ onMounted(() => {
                     </div>
                     <div>
                         <div class="font-semibold text-zinc-200 pb-2">Categories</div>
-                        <div class="font-semibold text-zinc-400 hover:text-zinc-200 active:text-zinc-300" v-for="category in categories" :key="category.id">
-                            <div @click="$emit('selectCategory', category), setActive(category.id)" class="cursor-pointer" :active="active = category.id"> - {{ category.Category }}</div>
+                        <div class="font-semibold text-zinc-400 hover:text-zinc-200 active:text-zinc-300"
+                            v-for="category in categories" :key="category.id">
+                            <div @click="$emit('selectCategory', category), setActive(category.id)"
+                                class="cursor-pointer" :active="active = category.id"
+                                @drop="$emit('dropCategory', category.id)" @dragover.prevent @dragenter.prevent> - {{
+                                        category.Category
+                                }}</div>
                         </div>
                     </div>
 

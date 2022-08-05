@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import router from "../../router/index.js";
 import { userStore } from "../../stores/user";
@@ -9,9 +9,25 @@ import AdminLibrary from '../../components/admin/AdminLibrary.vue'
 import AdminContent from '../../components/admin/AdminContent.vue'
 import AdminInspector from '../../components/admin/AdminInspector.vue'
 import AdminUpload from '../../components/admin/AdminUpload.vue'
+
 const strapi = import.meta.env.VITE_STRAPI_URL
 const photos = ref([])
+const filteredPhotos = computed(() => {
+    let filter = filterCat.value
+    if (filter == '') return photos.value
+    console.log(filter)
+    return photos.value.filter(photo => {
+        if (photo.categories.length > 0) {
+            return photo.categories.filter(cat => cat.id === filter)
+        }
+
+    }
+
+    )
+})
+const draggedPhoto = ref(null)
 const photo = ref(null)
+const filterCat = ref('')
 const showUpload = ref(false)
 const category = ref(null)
 const apiParams = ref('_sort=created_at:ASC')
@@ -35,14 +51,16 @@ function submitSuccess() {
     showUpload.value = false
 }
 function selectCategory(cat) {
-    if (cat == null) {
-        category.value = null
-
-    } else {
-        category.value = cat.Category
-
+    if (cat != null) {
+        console.log('selecting cat', cat.id)
+        filterCat.value = cat.id
     }
-    getPhotos()
+    else {
+        console.log('selecting all')
+        filterCat.value = ''
+    }
+
+
 }
 async function updatePhoto(p) {
     let url = strapi + `/photos/` + p.id
@@ -58,35 +76,58 @@ async function updatePhoto(p) {
         console.error(error);
     }
 }
-async function getPhotos() {
-    let url = ''
-    if (category.value == null) {
-        url = strapi + `/photos?` + apiParams.value
-    } else {
-        url = strapi + `/photos?categories.Category_in=` + category.value + '&' + apiParams.value
+function dragPhoto(drag) {
+    draggedPhoto.value = drag
+    console.log('drag photo', draggedPhoto.value)
+
+}
+async function dropCategory(id) {
+
+    let url = strapi + `/photos/` + draggedPhoto.value.id
+    var cats = [id]
+
+    draggedPhoto.value.categories.forEach(cat => {
+        cats.push(cat.id)
+    })
+    //console.log(cats)
+    try {
+        const response = await axios.put(url, { "categories": [cats] }, {
+            headers: {
+                Authorization:
+                    'Bearer ' + store.token,
+            },
+        });
+        console.log(response.data)
+
+    } catch (error) {
+        console.error(error);
     }
+}
+async function getPhotos() {
+    let url = strapi + `/photos?` + apiParams.value
     try {
         const response = await axios.get(url, {
             headers: {
                 Authorization:
-                    'Bearer ' +  store.token,
+                    'Bearer ' + store.token,
             },
         });
-        //console.log('get photos', response.data)
+        console.log('get photos', response.data)
         photos.value = response.data
         photo.value = photos.value[0]
     } catch (error) {
         console.error(error);
     }
+
 }
 async function logout() {
-  try {
-    store.$reset();
-    const navigationResult = await router.push("/auth/login");
-  } catch (error) {
-    console.log(error, "log out error catch");
-    errors.value = error.response;
-  }
+    try {
+        store.$reset();
+        const navigationResult = await router.push("/auth/login");
+    } catch (error) {
+        console.log(error, "log out error catch");
+        errors.value = error.response;
+    }
 }
 onMounted(() => {
     getPhotos()
@@ -101,8 +142,9 @@ onMounted(() => {
             </div>
 
             <div class="flex flex-row justify-between items-center w-screen min-h-max flex-grow">
-                <AdminLibrary @select-category="selectCategory" />
-                <AdminContent @inspect-photo="inspectPhoto" :photos="photos" :category="category" @sort-photos="sortPhotos"/>
+                <AdminLibrary @select-category="selectCategory" @drop-category="dropCategory" />
+                <AdminContent @inspect-photo="inspectPhoto" :photos="filteredPhotos" :category="category"
+                    @sort-photos="sortPhotos" @drag-photo="dragPhoto" />
                 <AdminInspector :photo="photo" @delete="deletePhoto(id)" @update-photo="updatePhoto" />
             </div>
             <div>

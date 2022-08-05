@@ -37,10 +37,14 @@ const selected = ref(null)
                         @click="sortMenu = !sortMenu">sort</button>
                     <div v-show="sortMenu" class="fixed z-10 rounded koken-shadow w-fit bg-zinc-800 mt-1">
                         <ul class="py-1 text-sm text-zinc-200 cursor-pointer" @mouseleave="sortMenu = false">
-                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=created_at:ASC')">Oldest Uploaded First</li>
-                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=created_at:DESC')">Newest Uploaded First</li>
-                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=updated_at:ASC')">Oldest Updated First</li>
-                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=updated_at:DESC')">Newest Updated First
+                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=created_at:ASC')">Oldest Uploaded
+                                First</li>
+                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=created_at:DESC')">Newest Uploaded
+                                First</li>
+                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=updated_at:ASC')">Oldest Updated
+                                First</li>
+                            <li class="menu-item" @click="$emit('sortPhotos', '_sort=updated_at:DESC')">Newest Updated
+                                First
                             </li>
 
                         </ul>
@@ -72,19 +76,20 @@ const selected = ref(null)
                             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-10 gap-4 p-2 text-zinc-400 font-semibold text-sm">
                             <div v-for="photo in props.photos" :key="photo.id"
                                 class="h-full flex flex-col justify-start items-center gap-2">
-
                                 <template v-if="photo.photo.formats">
                                     <img :src="strapi + photo.photo.formats.thumbnail.url"
                                         class="koken-shadow block object-cover object-center rounded cursor-pointer"
                                         :class="store.settings.square ? 'h-32 w-32' : 'max-h-32 max-w-32', photo.id == selected ? 'ring-4 ring-orange-500' : ''"
-                                        @click="$emit('inspectPhoto', photo), selected = photo.id">
+                                        @click="$emit('inspectPhoto', photo), selected = photo.id" draggable
+                                        @dragstart="$emit('dragPhoto', photo)">
                                 </template>
                                 <template v-else>
 
                                     <img :src="strapi + photo.photo.url"
                                         class="koken-shadow block object-cover object-center rounded cursor-pointer"
                                         :class="store.settings.square ? 'h-32 w-32' : 'max-h-32 max-w-32', photo.id == selected ? 'ring-4 ring-orange-500' : ''"
-                                        @click="$emit('inspectPhoto', photo), selected = photo.id">
+                                        @click="$emit('inspectPhoto', photo), selected = photo.id" draggable
+                                        @dragstart="$emit('dragPhoto', photo)">
                                 </template>
                                 <div class="">{{ photo.Title }}</div>
 

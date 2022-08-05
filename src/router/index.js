@@ -25,6 +25,12 @@ const router = createRouter({
       meta: {
         requiresAuth: false,
       },
+      meta: {
+        scrollPos: {
+          top: 0,
+          left: 0,
+        },
+      },
     },
     {
       path: "/photo/:id",
@@ -66,11 +72,24 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (savedPosition) {
+          resolve(savedPosition)
+        } else {
+          resolve({ x: 0, y: 0 })
+        }
+      }, 250)
+    })
+  },
 })
 
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async (to, from, next) => {
   const store = await userStore();
+  //console.log('window.scrollY:', window.scrollY)
+  from.meta?.scrollTop && (from.meta.scrollTop = window.scrollY)
   if (to.meta.requiresAuth) {
     if (store.isAdmin) {
       next();

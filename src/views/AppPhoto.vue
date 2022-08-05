@@ -27,7 +27,7 @@ onMounted(() => {
     <div class="bg-white">
         <div v-if="photo" class="flex flex-col justify-around items-center">
             <div class="text-2xl font-semibold py-2 md:py-4 lg:py-10" v-html="photo.Title ? photo.Title : photo.photo.name"></div>
-            <img :src="strapi + photo.photo.url"
+            <img :src="strapi + photo.photo.formats.large.url"
                 class="block object-cover object-center w-full sm:w-5/6 md:w-4/6 lg:3/6" />
             <div class="text-xl font-normal p-10">{{photo.Caption}}</div>
 
