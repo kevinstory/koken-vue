@@ -6,6 +6,7 @@ import AppPhoto from "../views/AppPhoto.vue";
 import AuthLogin from "../views/auth/AuthLogin.vue";
 import AuthRegister from "../views/auth/AuthRegister.vue";
 import AuthReset from "../views/auth/AuthReset.vue";
+import AdminSettings from "../views/admin/AdminSettings.vue";
 import AdminView from "../views/admin/AdminView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +69,14 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: AdminView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: AdminSettings,
       meta: {
         requiresAuth: true,
       },
