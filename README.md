@@ -1,10 +1,13 @@
 # koken-vue
 Vue3 Prototype Replacement of the retired Koken Photography CMS.
 
-<p align="center">
-    <img width="100" src="https://github.com/kevinstory/koken-vue/blob/main/public/logo.png?raw=true"><br />
-
-</p>
+# Features
+- Uses `axios` to fetch photos from Strapi API
+- Auth with Strapi user
+- Upload multiple photos at once into Strapi database
+- Drag and drop photos to categories
+- Live updates to photo details in API as you edit
+- Filtering photos array based on selected category
 
 ## Admin Example
 ![Admin Panel](https://github.com/kevinstory/koken-vue/blob/main/koken-vue.jpg?raw=true)
@@ -32,7 +35,7 @@ npm run build
 
 ## Overview
 
-**koken-vue** is an experiment for me to explore more VueJS skills to prototype the Koken content management system. I do not currently intend to put this into production. 
+**koken-vue** is an experiment for me to explore more VueJS skills to prototype the Koken content management system. I do not currently intend to put this into production. This uses Strapi for authentication into the Admin section and to manage photos. All photos were taken from Unsplash. 
 
 ## Resources Used
 
