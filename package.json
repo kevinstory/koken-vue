@@ -9,7 +9,6 @@
   "dependencies": {
     "@mdi/font": "^7.0.96",
     "axios": "^0.27.2",
-    "firebase": "^9.8.4",
     "imagemagick": "^0.1.3",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^2.1.0",
