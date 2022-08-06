@@ -18,7 +18,7 @@ const selected = ref(null)
             <div class="flex flex-row justify-between items-center gap-3 text-zinc-200 font-mono">
                 <div class="relative w-42">
                     <button id="dropdownDefault" class="font-medium text-sm" type="button"
-                        @click="editMenu = !editMenu">edit</button>
+                        @click="editMenu = !editMenu; sortMenu = false; filterMenu = false">edit</button>
                     <div v-show="editMenu" class="fixed z-10 rounded koken-shadow w-42 min-w-fit bg-zinc-800 mt-1">
                         <ul class="py-1 text-sm text-zinc-200 " @mouseleave="editMenu = false">
                             <li class="menu-item">Rotate Left</li>
@@ -34,7 +34,7 @@ const selected = ref(null)
                 </div>
                 <div class="relative">
                     <button id="dropdownDefault" class="font-medium text-sm" type="button"
-                        @click="sortMenu = !sortMenu">sort</button>
+                        @click="sortMenu = !sortMenu; editMenu = false; filterMenu = false">sort</button>
                     <div v-show="sortMenu" class="fixed z-10 rounded koken-shadow w-fit bg-zinc-800 mt-1">
                         <ul class="py-1 text-sm text-zinc-200 cursor-pointer" @mouseleave="sortMenu = false">
                             <li class="menu-item" @click="$emit('sortPhotos', '_sort=created_at:ASC')">Oldest Uploaded
@@ -53,7 +53,7 @@ const selected = ref(null)
                 </div>
                 <div class="relative">
                     <button id="dropdownDefault" class="font-medium text-sm" type="button"
-                        @click="filterMenu = !filterMenu">share</button>
+                        @click="filterMenu = !filterMenu; editMenu = false; sortMenu = false">share</button>
                     <div v-show="filterMenu" class="fixed z-10 rounded koken-shadow w-fit bg-zinc-800 mt-1">
                         <ul class="py-1 text-sm text-zinc-200 " @mouseleave="filterMenu = false">
                             <li class="menu-item">Twitter</li>

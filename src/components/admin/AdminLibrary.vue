@@ -16,6 +16,18 @@ async function getCategories() {
 function setActive(c) {
     active.value = c
 }
+function dragOverOn(e) {
+    //console.log('over', e)
+    if (e.target.classList.contains("dropzone")) {
+        e.target.classList.add("dragover");
+    }
+}
+function dragOverOff(e) {
+    //console.log('leave', e)
+    if (e.target.classList.contains("dropzone")) {
+        e.target.classList.remove("dragover");
+    }
+}
 onMounted(() => {
     getCategories()
 })
@@ -40,8 +52,9 @@ onMounted(() => {
                         <div class="font-semibold text-zinc-400 hover:text-zinc-200 active:text-zinc-300"
                             v-for="category in categories" :key="category.id">
                             <div @click="$emit('selectCategory', category), setActive(category.id)"
-                                class="cursor-pointer" :active="active = category.id"
-                                @drop="$emit('dropCategory', category.id)" @dragover.prevent @dragenter.prevent> - {{
+                                class="cursor-pointer dropzone" :active="active = category.id"
+                                @drop.prevent="$emit('dropCategory', category.id, $event)" @dragover.prevent @dragenter="dragOverOn($event)"
+                                @dragleave="dragOverOff($event)"> - {{
                                         category.Category
                                 }}</div>
                         </div>
@@ -56,3 +69,8 @@ onMounted(() => {
         </div>
     </div>
 </template>
+<style scoped>
+.dragover {
+    color: yellow;
+}
+</style>

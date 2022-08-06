@@ -15,14 +15,12 @@ const photos = ref([])
 const filteredPhotos = computed(() => {
     let filter = filterCat.value
     if (filter == '') return photos.value
-    console.log(filter)
+    //console.log('filteredPhotos', filter)
     return photos.value.filter(photo => {
         if (photo.categories.length > 0) {
-            return photo.categories.filter(cat => cat.id === filter)
+            return photo.categories.some(cat => filter == cat.id)
         }
-
     }
-
     )
 })
 const draggedPhoto = ref(null)
@@ -59,10 +57,9 @@ function selectCategory(cat) {
         console.log('selecting all')
         filterCat.value = ''
     }
-
-
 }
 async function updatePhoto(p) {
+    console.log('updateing photo')
     let url = strapi + `/photos/` + p.id
     try {
         const response = await axios.put(url, { "Caption": p.Caption, "Title": p.Title }, {
@@ -79,13 +76,13 @@ async function updatePhoto(p) {
 function dragPhoto(drag) {
     draggedPhoto.value = drag
     console.log('drag photo', draggedPhoto.value)
-
 }
-async function dropCategory(id) {
-
+async function dropCategory(id, e) {
+    if (e.target.classList.contains("dropzone")) {
+        e.target.classList.remove("dragover");
+    }
     let url = strapi + `/photos/` + draggedPhoto.value.id
     var cats = [id]
-
     draggedPhoto.value.categories.forEach(cat => {
         cats.push(cat.id)
     })
@@ -97,8 +94,8 @@ async function dropCategory(id) {
                     'Bearer ' + store.token,
             },
         });
-        console.log(response.data)
-
+        //console.log(response.data)
+        getPhotos()
     } catch (error) {
         console.error(error);
     }
@@ -112,7 +109,7 @@ async function getPhotos() {
                     'Bearer ' + store.token,
             },
         });
-        console.log('get photos', response.data)
+        //console.log('get photos', response.data)
         photos.value = response.data
         photo.value = photos.value[0]
     } catch (error) {
