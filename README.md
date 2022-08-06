@@ -6,6 +6,9 @@ Vue3 Prototype Replacement of the retired Koken Photography CMS.
 
 </p>
 
+## Admin Example
+
+## Public Site Example
 
 ## Install
 
